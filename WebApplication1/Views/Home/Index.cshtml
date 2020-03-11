@@ -2,18 +2,29 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-@using (Html.BeginForm("SaveRSS", "Home", FormMethod.Post))
+@using (Html.BeginForm())
 {
     <div>
         @Html.LabelFor(x => Model.RSSlink)
         @Html.TextBoxFor(x => Model.RSSlink)
 
         <br>
+
         @Html.LabelFor(x => Model.Email)
         @Html.TextBoxFor(x => Model.Email)
         <div>
-            <input type="submit" value="Save" />
+            <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" />
+        </div>
+
+        <div>
+            @if (Model?.RSSSelectList != null)
+            {
+                @Html.ListBoxFor(model => model.SelectedRSSLink, Model.RSSSelectList as SelectList)
+            }
+
+        </div>
+        <div>
+            <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" />
         </div>
     </div>
 }

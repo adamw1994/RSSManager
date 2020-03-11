@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -37,6 +38,14 @@ namespace WebApplication1.Controllers
             var repository = new RepositoryService();
             repository.SaveSubscription(subscription);
             return View("Index");
+        }
+        [HttpPost]
+        public ActionResult LoadRSS(ManagerModel model)
+        {
+            var repository = new RepositoryService();
+            var rssList = repository.GetSubscription(model.Email);
+            model.RSSSelectList = new SelectList(rssList, "Id", "RSSlink");
+            return View("Index",model);
         }
     }
 }

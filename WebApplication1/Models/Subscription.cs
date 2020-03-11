@@ -12,5 +12,6 @@ namespace WebApplication1.Models
         public string RSSlink { get; set; }
 
         public int Id { get; set; }
+
     }
 }

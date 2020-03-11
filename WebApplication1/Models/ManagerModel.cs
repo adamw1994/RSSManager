@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace WebApplication1.Models
         public string RSSlink { get; set; }
         [Display(Name = "Email")]
         public string Email { get; set; }
+        public SelectList RSSSelectList { get; set; }
+        public IEnumerable<int> SelectedRSSLink { get; set; }
     }
 }

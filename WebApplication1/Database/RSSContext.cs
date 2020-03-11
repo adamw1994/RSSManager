@@ -11,7 +11,7 @@ namespace WebApplication1.Database
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS01;Database=RSSDB;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=localhost;Database=RSSDB;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
