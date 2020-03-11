@@ -2,29 +2,39 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-@using (Html.BeginForm())
-{
-    <div>
-        @Html.LabelFor(x => Model.RSSlink)
-        @Html.TextBoxFor(x => Model.RSSlink)
 
-        <br>
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="col-sm">
+                @Html.LabelFor(x => Model.RSSlink)
+                @Html.TextBoxFor(x => Model.RSSlink)
+            </div>
 
-        @Html.LabelFor(x => Model.Email)
-        @Html.TextBoxFor(x => Model.Email)
-        <div>
-            <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" />
+            <div class="col-sm">
+                @Html.LabelFor(x => Model.Email)
+                @Html.TextBoxFor(x => Model.Email)
+            </div>
+            <div class="col-sm">
+                <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" />
+            </div>
         </div>
 
-        <div>
-            @if (Model?.RSSSelectList != null)
-            {
-                @Html.ListBoxFor(model => model.SelectedRSSLink, Model.RSSSelectList as SelectList)
-            }
+        <div class="row">
 
+            <div class="col-sm">
+                <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" />
+            </div>
+
+
+
+            <div class="col-sm">
+                @if (Model?.RSSSelectList != null)
+                {
+                    @Html.ListBoxFor(model => model.SelectedRSSLink, Model.RSSSelectList as SelectList)
+                }
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" />
-        </div>
-    </div>
-}
+    }
+</div>
