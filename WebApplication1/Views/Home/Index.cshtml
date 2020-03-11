@@ -1,0 +1,19 @@
+﻿@model ManagerModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using (Html.BeginForm("SaveRSS", "Home", FormMethod.Post))
+{
+    <div>
+        @Html.LabelFor(x => Model.RSSlink)
+        @Html.TextBoxFor(x => Model.RSSlink)
+
+        <br>
+        @Html.LabelFor(x => Model.Email)
+        @Html.TextBoxFor(x => Model.Email)
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    </div>
+}
