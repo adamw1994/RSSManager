@@ -4,37 +4,44 @@
 }
 
 <div class="container">
-    @using (Html.BeginForm())
-    {
-        <div class="row">
-            <div class="col-sm">
-                @Html.LabelFor(x => Model.RSSlink)
-                @Html.TextBoxFor(x => Model.RSSlink)
+    @*@using (Html.BeginForm())
+    {*@
+        <div class="row py-3">
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.RSSlink)
+                @Html.TextBoxFor(m => m.RSSlink, new { @class = "form-control" })
             </div>
 
-            <div class="col-sm">
-                @Html.LabelFor(x => Model.Email)
-                @Html.TextBoxFor(x => Model.Email)
+            <div class="col-md-4">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
             </div>
-            <div class="col-sm">
-                <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" />
+            <div class="col-md-4">
+                <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="row py-3" style="min-height: 400px">
+            <div class="col-md-6">
+                @Html.TextAreaFor(m => m.EmailContent, new { @class = "form-control", @style="height: 100%"})
+            </div>
+
+            <div class="col-md-3">
+                @Html.ListBoxFor(m => m.SelectedRSSLink, Model.RSSSelectList as SelectList, new { @class = "form-control", @style="height: 100%" })
+            </div>
+
+            <div class="col-md-3">
             </div>
         </div>
 
-        <div class="row">
-
-            <div class="col-sm">
-                <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" />
+        <div class="row py-3">
+            <div class="col-md-2">
+                <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" class="btn btn-success" />
             </div>
 
-
-
-            <div class="col-sm">
-                @if (Model?.RSSSelectList != null)
-                {
-                    @Html.ListBoxFor(model => model.SelectedRSSLink, Model.RSSSelectList as SelectList)
-                }
+            <div class="col-md-2">
+                <input type="submit" value="Send Email" class="btn btn-success" />
             </div>
         </div>
-    }
+   @* }*@
 </div>

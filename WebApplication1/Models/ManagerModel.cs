@@ -14,6 +14,7 @@ namespace WebApplication1.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
         public SelectList RSSSelectList { get; set; }
+        public string EmailContent { get; set; }
         public IEnumerable<int> SelectedRSSLink { get; set; }
     }
 }

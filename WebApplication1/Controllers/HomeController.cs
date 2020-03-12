@@ -20,9 +20,10 @@ namespace WebApplication1.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(ManagerModel model)
         {
-            return View();
+            model.RSSSelectList = new SelectList(new List<Subscription>(), "Id", "RSSlink");
+            return View(model);
         }
 
 
