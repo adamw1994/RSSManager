@@ -23,6 +23,7 @@ namespace WebApplication1.Controllers
         public IActionResult Index(ManagerModel model)
         {
             model.RSSSelectList = new SelectList(new List<Subscription>(), "Id", "RSSlink");
+           
             return View(model);
         }
 
@@ -38,15 +39,26 @@ namespace WebApplication1.Controllers
 
             var repository = new RepositoryService();
             repository.SaveSubscription(subscription);
-            return View("Index");
-        }
-        [HttpPost]
-        public ActionResult LoadRSS(ManagerModel model)
-        {
-            var repository = new RepositoryService();
             var rssList = repository.GetSubscription(model.Email);
             model.RSSSelectList = new SelectList(rssList, "Id", "RSSlink");
             return View("Index",model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> LoadRSS(ManagerModel model)
+        {
+            var repository = new RepositoryService();
+            var RSSService = new RSSService();
+
+            var rssList = repository.GetSubscription(model.Email);
+            model.EmailContent = await RSSService.GetEmailContent(rssList);
+            model.RSSSelectList = new SelectList(rssList, "Id", "RSSlink");
+            return View("Index",model);
+        }
+
+        [HttpPost]
+        public ActionResult SendEmail(ManagerModel model)
+        {
+            return View();
         }
     }
 }

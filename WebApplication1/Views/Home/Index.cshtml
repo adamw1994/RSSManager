@@ -4,8 +4,8 @@
 }
 
 <div class="container">
-    @*@using (Html.BeginForm())
-    {*@
+    @using (Html.BeginForm())
+    {
         <div class="row py-3">
             <div class="col-md-4">
                 @Html.LabelFor(m => m.RSSlink)
@@ -17,13 +17,14 @@
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
             </div>
             <div class="col-md-4">
-                <input type="submit" value="Wczytaj RSSy" asp-controller="Home" asp-action="LoadRSS" class="btn btn-primary" />
+                <input type="submit" value="Dodaj" asp-controller="Home" asp-action="SaveRSS" class="btn btn-success" />
+                <input type="submit" value="pobierz RSSy" asp-controller="Home" asp-action="LoadRSS" class="btn btn-primary" />
             </div>
         </div>
 
         <div class="row py-3" style="min-height: 400px">
             <div class="col-md-6">
-                @Html.TextAreaFor(m => m.EmailContent, new { @class = "form-control", @style="height: 100%"})
+                @Html.TextArea("EmailContentTextArea", Model.EmailContent, new { @class = "form-control", @style="height: 100%" })
             </div>
 
             <div class="col-md-3">
@@ -36,12 +37,9 @@
 
         <div class="row py-3">
             <div class="col-md-2">
-                <input type="submit" value="Save" asp-controller="Home" asp-action="SaveRSS" class="btn btn-success" />
+                <input type="submit" value="Send Email" class="btn btn-success" asp-controller="Home" asp-action="SendEmail" />
             </div>
 
-            <div class="col-md-2">
-                <input type="submit" value="Send Email" class="btn btn-success" />
-            </div>
         </div>
-   @* }*@
+    }
 </div>
