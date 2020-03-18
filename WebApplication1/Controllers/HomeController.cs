@@ -12,16 +12,11 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public IActionResult Index(ManagerModel model)
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            model.EmailContent = "";
+            model.SelectedSubscriptions = new List<int>();
+            return View(model);
         }
 
 
@@ -31,12 +26,37 @@ namespace WebApplication1.Controllers
             var subscription = new Subscription
             {
                 Email = model.Email,
-                RSSlink = model.RSSlink
+                RSSlink = model.RSSLink
             };
 
             var repository = new RepositoryService();
             repository.SaveSubscription(subscription);
-            return View("Index");
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DownloadRSS(ManagerModel model)
+        {
+            var userEmail = model.Email;
+            var repositoryService = new RepositoryService();
+            var subscriptions = repositoryService.GetSubscription(userEmail);
+            var rssService = new RSSService();
+            var feedItems = new List<FeedItem>();
+            foreach (var subscription in subscriptions)
+            {
+                var rssLink = subscription.RSSlink;
+
+                feedItems.AddRange(await rssService.GetRSSFromUrl(rssLink));
+
+            }
+            string rssContent = "";
+            foreach(var feedItem in feedItems)
+            {
+                rssContent += feedItem.Title + "\n" + feedItem.PublishDate + "\n" + "\n" + feedItem.Content + "\n" + "\n" + "\n";
+            }
+            model.EmailContent = rssContent;
+
+            return View("Index", model);
         }
     }
 }
