@@ -27,6 +27,24 @@ namespace WebApplication1.Services
             }
         }
 
+        public Subscription GetSubscription(int id)
+        {
+            try
+            {
+                using (var context = new RSSContext())
+                {
+                    Subscription a = context.Subscriptions.Single(x => x.Id == id);
+                    return a;
+                }
+                
+            }
+
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public bool RemoveSubscription(Subscription subscription)
         {
             try
@@ -44,7 +62,7 @@ namespace WebApplication1.Services
                 return false;
             }
         }
-        public List<Subscription> GetSubscription(String email)
+        public List<Subscription> GetSubscriptions(String email)
         {
             try
             {

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -16,6 +17,7 @@ namespace WebApplication1.Controllers
         {
             model.EmailContent = "";
             model.SelectedSubscriptions = new List<int>();
+            model.Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
             return View(model);
         }
 
@@ -23,14 +25,30 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult SaveRSS(ManagerModel model)
         {
-            var subscription = new Subscription
+            Subscription subscription = new Subscription
             {
                 Email = model.Email,
                 RSSlink = model.RSSLink
             };
 
-            var repository = new RepositoryService();
-            repository.SaveSubscription(subscription);
+            RepositoryService repositoryService = new RepositoryService();
+            repositoryService.SaveSubscription(subscription);
+            model.SelectedSubscriptions = new List<int>();
+            model.Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
+            return View("Index", model);
+        }
+        [HttpPost]
+        public ActionResult DeleteRSSLink(ManagerModel model)
+        {
+            RepositoryService repositoryService = new RepositoryService();
+            foreach (int id in model.SelectedSubscriptions)
+            {
+                Subscription subscription = repositoryService.GetSubscription(id);
+                repositoryService.RemoveSubscription(subscription);
+            }
+            var userEmail = model.Email;
+            List<Subscription> subscriptions = repositoryService.GetSubscriptions(userEmail);
+            model.Subscriptions = new SelectList(subscriptions, "Id", "RSSlink");
             return View("Index", model);
         }
 
@@ -39,7 +57,7 @@ namespace WebApplication1.Controllers
         {
             var userEmail = model.Email;
             var repositoryService = new RepositoryService();
-            var subscriptions = repositoryService.GetSubscription(userEmail);
+            var subscriptions = repositoryService.GetSubscriptions(userEmail);
             var rssService = new RSSService();
             var feedItems = new List<FeedItem>();
             foreach (var subscription in subscriptions)
@@ -55,7 +73,8 @@ namespace WebApplication1.Controllers
                 rssContent += feedItem.Title + "\n" + feedItem.PublishDate + "\n" + "\n" + feedItem.Content + "\n" + "\n" + "\n";
             }
             model.EmailContent = rssContent;
-
+            model.SelectedSubscriptions = new List<int>();
+            model.Subscriptions = new SelectList(subscriptions, "Id", "RSSlink");
             return View("Index", model);
         }
     }
