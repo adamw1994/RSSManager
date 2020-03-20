@@ -5,10 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication1.Models
+namespace RSSreader.Models
 {
     public class ManagerModel
     {
+        public ManagerModel()
+        {
+            EmailContent = "";
+            SelectedSubscriptions = new List<int>();
+            Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
+        }
         [Display(Name = "RSS")]
         public string RSSLink { get; set; }
         [Display(Name = "Email")]

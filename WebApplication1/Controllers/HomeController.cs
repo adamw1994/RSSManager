@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using WebApplication1.Models;
-using WebApplication1.Services;
+using RSSreader.Models;
+using RSSreader.Services;
 
-namespace WebApplication1.Controllers
+namespace RSSreader.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index(ManagerModel model)
+        RepositoryService repositoryService;
+        RSSService rssService;
+        public HomeController()
         {
-            model.EmailContent = "";
-            model.SelectedSubscriptions = new List<int>();
-            model.Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
-            return View(model);
+            repositoryService = new RepositoryService();
+            rssService = new RSSService();
         }
 
+
+
+        public IActionResult Index(ManagerModel model)
+        {
+            return View(model);
+        }
 
         [HttpPost]
         public ActionResult SaveRSS(ManagerModel model)
@@ -31,22 +37,15 @@ namespace WebApplication1.Controllers
                 RSSlink = model.RSSLink
             };
 
-            RepositoryService repositoryService = new RepositoryService();
+            
             repositoryService.SaveSubscription(subscription);
-            model.SelectedSubscriptions = new List<int>();
-            model.Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
             return View("Index", model);
         }
         [HttpPost]
         public ActionResult DeleteRSSLink(ManagerModel model)
         {
-            RepositoryService repositoryService = new RepositoryService();
-            foreach (int id in model.SelectedSubscriptions)
-            {
-                Subscription subscription = repositoryService.GetSubscription(id);
-                repositoryService.RemoveSubscription(subscription);
-            }
-            var userEmail = model.Email;
+            repositoryService.RemoveSubscription(model.SelectedSubscriptions);
+            string userEmail = model.Email;
             List<Subscription> subscriptions = repositoryService.GetSubscriptions(userEmail);
             model.Subscriptions = new SelectList(subscriptions, "Id", "RSSlink");
             return View("Index", model);
@@ -55,26 +54,10 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ActionResult> DownloadRSS(ManagerModel model)
         {
-            var userEmail = model.Email;
-            var repositoryService = new RepositoryService();
-            var subscriptions = repositoryService.GetSubscriptions(userEmail);
-            var rssService = new RSSService();
-            var feedItems = new List<FeedItem>();
-            foreach (var subscription in subscriptions)
-            {
-                var rssLink = subscription.RSSlink;
-
-                feedItems.AddRange(await rssService.GetRSSFromUrl(rssLink));
-
-            }
-            string rssContent = "";
-            foreach(var feedItem in feedItems)
-            {
-                rssContent += feedItem.Title + "\n" + feedItem.PublishDate + "\n" + "\n" + feedItem.Content + "\n" + "\n" + "\n";
-            }
-            model.EmailContent = rssContent;
-            model.SelectedSubscriptions = new List<int>();
+            var subscriptions = repositoryService.GetSubscriptions(model.Email);
             model.Subscriptions = new SelectList(subscriptions, "Id", "RSSlink");
+            var feedItems = await rssService.SubscriptionsToFeedItems(subscriptions);
+            model.EmailContent = rssService.GetEmailContentFromFeedItemsMotherfucker(feedItems);
             return View("Index", model);
         }
     }

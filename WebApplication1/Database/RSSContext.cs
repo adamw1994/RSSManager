@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Models;
+using RSSreader.Models;
 
-namespace WebApplication1.Database
+namespace RSSreader.Database
 {
     public class RSSContext : DbContext
     {

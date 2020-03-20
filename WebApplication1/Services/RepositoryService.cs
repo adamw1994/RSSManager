@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Database;
-using WebApplication1.Models;
+using RSSreader.Database;
+using RSSreader.Models;
 
-namespace WebApplication1.Services
+namespace RSSreader.Services
 {
     public class RepositoryService
     {
@@ -45,15 +45,19 @@ namespace WebApplication1.Services
             }
         }
 
-        public bool RemoveSubscription(Subscription subscription)
+        public bool RemoveSubscription(IEnumerable<int> idsToRemove)
         {
             try
             {
                 using (var context = new RSSContext())
                 {
-                    context.Remove(subscription);
-                    context.SaveChanges();
-                }
+                    foreach (int id in idsToRemove)
+                    {
+                        Subscription subscription = GetSubscription(id);
+                        context.Remove(subscription);
+                        context.SaveChanges();
+                    }
+                }                   
                 return true;
             }
 
