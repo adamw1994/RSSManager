@@ -11,7 +11,6 @@ namespace RSSreader.Models
     {
         public ManagerModel()
         {
-            EmailContent = "";
             SelectedSubscriptions = new List<int>();
             Subscriptions = new SelectList(new List<Subscription>(), "Id", "RSSlink");
         }

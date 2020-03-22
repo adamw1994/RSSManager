@@ -61,7 +61,7 @@ namespace RSSreader.Services
             return feedItems;
         }
 
-        public string GetEmailContentFromFeedItemsMotherfucker(List<FeedItem> feedItems)
+        public string GetEmailContentFromFeedItems(List<FeedItem> feedItems)
         {
             string rssContent = "";
             foreach (var feedItem in feedItems)

@@ -21,8 +21,6 @@ namespace RSSreader.Controllers
             rssService = new RSSService();
         }
 
-
-
         public IActionResult Index(ManagerModel model)
         {
             return View(model);
@@ -57,7 +55,18 @@ namespace RSSreader.Controllers
             var subscriptions = repositoryService.GetSubscriptions(model.Email);
             model.Subscriptions = new SelectList(subscriptions, "Id", "RSSlink");
             var feedItems = await rssService.SubscriptionsToFeedItems(subscriptions);
-            model.EmailContent = rssService.GetEmailContentFromFeedItemsMotherfucker(feedItems);
+            model.EmailContent = rssService.GetEmailContentFromFeedItems(feedItems);
+            return View("Index", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SendEmail(ManagerModel model)
+        {
+            var subscriptions = repositoryService.GetSubscriptions(model.Email);
+            var feedItems = await rssService.SubscriptionsToFeedItems(subscriptions);
+            model.EmailContent = rssService.GetEmailContentFromFeedItems(feedItems);
+            var sender = new SendGridSenderService();
+            var result = await sender.SendEmail(model.Email, "RSS", model.EmailContent);
             return View("Index", model);
         }
     }
